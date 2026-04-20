@@ -22,11 +22,3 @@ O mapa do problema é representado por uma grade 2D, simulando quarteirões de u
 4. **Otimização:** A rota que acumular a menor distância total ("dronômetros") é eleita a vencedora.
 
 ⚠️ *Nota de Desempenho:* Por usar força bruta (complexidade fatorial $O(N!)$), este script é ideal para mapas com um número pequeno de entregas. Para muitos pontos, seriam necessárias abordagens heurísticas (como Algoritmos Genéticos ou Vizinho Mais Próximo).
-
-## 🚀 Como Executar
-
-O projeto foi escrito em **Python** e não requer a instalação de bibliotecas externas (dependências).
-
-1. Clone o repositório:
-   ```bash
-   git clone [https://github.com/SEU-USUARIO/NOME-DO-REPOSITORIO.git](https://github.com/SEU-USUARIO/NOME-DO-REPOSITORIO.git)
