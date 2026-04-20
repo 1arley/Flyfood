@@ -22,3 +22,11 @@ O mapa do problema é representado por uma grade 2D, simulando quarteirões de u
 4. **Otimização:** A rota que acumular a menor distância total ("dronômetros") é eleita a vencedora.
 
 ⚠️ *Nota de Desempenho:* Por usar força bruta (complexidade fatorial $O(N!)$), este script é ideal para mapas com um número pequeno de entregas. Para muitos pontos, seriam necessárias abordagens heurísticas (como Algoritmos Genéticos ou Vizinho Mais Próximo).
+
+## 🤷‍♂️ Integrantes
+
+- Misael Marcos (BSI 25.2 UFRPE)
+- Wanderson Mendonça (BSI 25.2 UFRPE)
+- Artur Iarley (BSI 25.2 UFRPE)
+- Luís Gabriel (BSI 25.2 UFRPE)
+- Professor Cícero Garrozi (UFRPE)
