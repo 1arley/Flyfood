@@ -30,3 +30,8 @@ O mapa do problema é representado por uma grade 2D, simulando quarteirões de u
 - Artur Iarley (BSI 25.2 UFRPE)
 - Luís Gabriel (BSI 25.2 UFRPE)
 - Professor Cícero Garrozi (UFRPE)
+
+### 📂 Arquivos
+
+- Canva: `https://www.canva.com/design/DAHHD4Lfqec/nO3eZlhCnnViqznTRW96BA/edit`
+- Relatório: `https://docs.google.com/document/d/1vM1DF6Otq1i2VjVA8A4A0w7GGlgW0tBv7dKrnw07u8E/edit?tab=t.0#heading=h.gjdgxs`
