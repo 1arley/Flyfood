@@ -1,37 +1,153 @@
-# 🚁 FLYFOOD (Caixeiro Viajante)
+# FLYFOOD - TSP com Forca Bruta e Algoritmo Genetico
 
-Este projeto resolve uma adaptação do clássico **Problema do Caixeiro Viajante (TSP - *Traveling Salesperson Problem*)** aplicado a um drone de entregas. 
+Este projeto resolve uma adaptacao do Problema do Caixeiro Viajante para o FLYFOOD: um drone sai da base `R`, visita todos os pontos de entrega (`A`, `B`, `C`, ...) e retorna para `R`.
 
-O script calcula a rota mais curta para um drone sair de sua base, entregar pacotes em diferentes pontos de uma cidade (representada por uma matriz/grade) e retornar à base, gastando a menor bateria (distância) possível.
+A distancia usada e Manhattan:
 
-## 📌 Sobre o Projeto
+```text
+distancia = |linha1 - linha2| + |coluna1 - coluna2|
+```
 
-O mapa do problema é representado por uma grade 2D, simulando quarteirões de uma cidade. Por conta disso, o drone não pode voar nas diagonais. Para calcular o deslocamento, o algoritmo utiliza a **Distância de Manhattan** (apenas movimentos horizontais e verticais).
+Nos comandos abaixo, use `python main.py`. Se o Windows nao encontrar `python`, use o executavel Python disponivel no seu ambiente.
 
-### Regras do Mapa:
-- `R`: Representa a base do drone (ponto de partida e chegada).
-- `0`: Representa espaços vazios no mapa.
-- `Letras (A, B, C...)`: Representam os pontos de entrega.
-- A primeira linha da entrada indica as dimensões da matriz (Linhas x Colunas).
+## Formato da entrada FLYFOOD
 
-## 🧠 Como Funciona o Algoritmo
+A primeira linha informa `linhas colunas`. Depois vem a matriz:
 
-1. **Mapeamento:** O código varre a matriz (ignorando os `0`s) e salva as coordenadas `(linha, coluna)` da base e de cada ponto de entrega.
-2. **Força Bruta (Permutação):** Utilizando a biblioteca nativa `itertools`, o script gera **todas as combinações possíveis** de rotas de entrega.
-3. **Cálculo de Custo:** Para cada rota, ele calcula a distância da base até a primeira entrega, entre as entregas seguintes, e a volta para a base.
-4. **Otimização:** A rota que acumular a menor distância total ("dronômetros") é eleita a vencedora.
+```text
+4 4
+R 0 A 0
+0 0 0 0
+B 0 0 C
+0 0 0 0
+```
 
-⚠️ *Nota de Desempenho:* Por usar força bruta (complexidade fatorial $O(N!)$), este script é ideal para mapas com um número pequeno de entregas. Para muitos pontos, seriam necessárias abordagens heurísticas (como Algoritmos Genéticos ou Vizinho Mais Próximo).
+Regras:
 
-## 🤷‍♂️ Integrantes
+- `R`: base do drone.
+- `0`: espaco vazio.
+- Letras maiusculas: pontos de entrega.
+- Deve existir exatamente uma base `R`.
+- Deve existir pelo menos um ponto de entrega.
+
+## Conversao para matriz triangular superior
+
+O comando abaixo converte a instancia FLYFOOD para um arquivo no estilo TSPLIB usado por instancias como BRAIL58, com `EDGE_WEIGHT_TYPE: EXPLICIT` e `EDGE_WEIGHT_FORMAT: UPPER_ROW`.
+
+```powershell
+python main.py convert --input entrada.txt --output flyfood.tsp
+```
+
+Para o exemplo acima, a ordem dos nos e:
+
+```text
+R A B C
+```
+
+Coordenadas:
+
+```text
+R = (0, 0)
+A = (0, 2)
+B = (2, 0)
+C = (2, 3)
+```
+
+Matriz completa de distancias Manhattan:
+
+```text
+0 2 2 5
+2 0 4 3
+2 4 0 3
+5 3 3 0
+```
+
+Triangular superior sem diagonal (`UPPER_ROW`):
+
+```text
+2 2 5 4 3 3
+```
+
+## Resolver por forca bruta
+
+```powershell
+python main.py solve --method brute --input entrada.txt
+```
+
+A forca bruta testa todas as permutacoes possiveis, entao ela serve como validacao para instancias pequenas.
+
+## Resolver por Algoritmo Genetico
+
+Padrao: torneio binario para pais e esquema geracional para sobreviventes.
+
+```powershell
+python main.py solve --method ga --input entrada.txt --seed 42
+```
+
+Selecionar pais por torneio binario:
+
+```powershell
+python main.py solve --method ga --input entrada.txt --parent-selection tournament --tournament-size 2
+```
+
+Selecionar pais por roleta:
+
+```powershell
+python main.py solve --method ga --input entrada.txt --parent-selection roulette
+```
+
+Sobreviventes por esquema geracional:
+
+```powershell
+python main.py solve --method ga --input entrada.txt --survivor-selection generational
+```
+
+Sobreviventes por estado-estavel:
+
+```powershell
+python main.py solve --method ga --input entrada.txt --survivor-selection steady-state
+```
+
+Parametros uteis:
+
+```powershell
+python main.py solve --method ga --input entrada.txt --population-size 100 --generations 800 --mutation-rate 0.2 --seed 42
+```
+
+## Comparar AG versus Forca Bruta
+
+```powershell
+python main.py compare --input entrada.txt --runs 10 --seed 42
+```
+
+A comparacao imprime:
+
+- melhor rota da forca bruta;
+- melhor rota encontrada pelo AG;
+- custo medio, melhor e pior custo do AG;
+- tempo medio do AG;
+- gap percentual do melhor AG em relacao a forca bruta.
+
+Por seguranca, a comparacao bloqueia forca bruta acima de 10 entregas. Para aumentar o limite:
+
+```powershell
+python main.py compare --input entrada.txt --max-bruteforce-deliveries 11
+```
+
+## Execucao interativa
+
+Sem argumentos, o programa mantem o uso antigo: pede a matriz pelo terminal e resolve por forca bruta.
+
+```powershell
+python main.py
+```
+
+## Integrantes
 
 - Misael Marcos (BSI 25.2 UFRPE)
-- Wanderson Mendonça (BSI 25.2 UFRPE)
+- Wanderson Mendonca (BSI 25.2 UFRPE)
 - Artur Iarley (BSI 25.2 UFRPE)
-- Luís Gabriel (BSI 25.2 UFRPE)
-- Professor Cícero Garrozi (UFRPE)
+- Luis Gabriel (BSI 25.2 UFRPE)
+- Professor Cicero Garrozi (UFRPE)
 
-## 📂 Arquivos
 
-- Canva: `https://www.canva.com/design/DAHHD4Lfqec/nO3eZlhCnnViqznTRW96BA/edit`
-- Relatório: `https://docs.google.com/document/d/1vM1DF6Otq1i2VjVA8A4A0w7GGlgW0tBv7dKrnw07u8E/edit?tab=t.0#heading=h.gjdgxs`
